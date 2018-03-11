@@ -13,7 +13,7 @@ app.use(bodyparser.json()); // Return a Javascript Object of the given json in t
 
 app.post('/todos',(req, res) =>{
 
-    console.log(req);
+    
     var newTodos = new Todos({
         text: req.body.text
     });
@@ -31,3 +31,5 @@ app.post('/todos',(req, res) =>{
 app.listen(3000,()=>{
     console.log(`Started on Port 3000`);
 });
+
+module.exports = {app};
