@@ -15,10 +15,9 @@ db.collection('user').find({name: 'Amit Sharma'}).count().then((docs)=>{
 },(err)=>{
 
     console.log('Could Not Count the NUmber of user due to : ',err);
-});
-
-// db.collection('Todos').insertOne({
-
+    
+    // db.collection('Todos').insertOne({
+    });
 //     text: 'Something to do ',
 //     completed: false
 // },(err, res)=>{
@@ -27,6 +26,7 @@ db.collection('user').find({name: 'Amit Sharma'}).count().then((docs)=>{
 // {
 //    return  console.log('Unable to Connect to Todos', err);
 // }
+
 
 // console.log(JSON.stringify(res.ops,undefined,2));
 
