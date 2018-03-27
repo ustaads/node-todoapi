@@ -8,7 +8,7 @@ var {ObjectID} = require('mongodb');
 
 var app = express();
 
-var fs = require('fs');
+
 
 app.use(bodyparser.json()); // Return a Javascript Object of the given json in the body
 
