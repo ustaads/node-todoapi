@@ -67,33 +67,30 @@ describe('Get /todos',()=>{
  });
 });
 
-// describe('Get /todos/id',()=>{
-//  it('should get a single todos',(done)=>{
-//  request(app)
-//  .get(`/todos/${todos[0]._id.toHexString()}`)
-//  .expect(200)
+describe('Get /todos/id',()=>{
+ it('should get a single todos',(done)=>{
+ request(app)
+ .get(`/todos/${todos[0]._id.toHexString()}`)
+ .expect(200)
 //  .expect((res)=>{
 //  expect(res.body.todos[0].text).toBe(todos[0].text);
+  
+//  })
+.end(done); 
+ });
+ it('should return 404 for non-object ids',(done)=>{
+ request(app)
+ .get(`/todos/${123}`)
+ .expect(404)
+ .end(done); 
+ });
  
-//  }).end(done); 
-//  });
-//  // it('should return 404 if todo not found',(done)=>{
-//  // request(app)
-//  // .get(`/todos/${todos[0]._id.toHexString()}`)
-//  // .expect(request.code).toBe(404)
-//  // .expect((res)=>{
-//  // expect({}).toBe({});
- 
-//  // }).end(done); 
-//  // });
-//  // it('should return 404 for non-object ids',(done)=>{
-//  // request(app)
-//  // .get(`/todos/${todos[0]._id}`)
-//  // .expect(req.code).toBe(404)
-//  // .expect((res)=>{
-//  // expect(todos[0]._id).toBe(todos[0]._id);
- 
-//  // }).end(done); 
-//  // });
- 
-// }); 
+ it('should return 404 if todo not found',(done)=>{
+    request(app)
+    .get(`/todos/${new ObjectID().toHexString()}`)
+    .expect(404)
+    .end(done);
+
+}); 
+}); 
+
