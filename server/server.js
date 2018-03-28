@@ -52,7 +52,7 @@ app.get('/todos/:id', (req, res)=>{
 
     if(!ObjectID.isValid(id))
     {
-        return res.status(404).send();
+        return res.status(404).send({});
     }
 
     Todos.findById(id).then((success)=>{
@@ -67,6 +67,26 @@ app.get('/todos/:id', (req, res)=>{
 
 });
 
+app.delete('/todos/:id',(req, res)=>{
+
+    var id = req.params.id;
+
+    if(!ObjectID.isValid(id)){
+        console.log('Invalid', id);
+        return res.status(404).send();
+    }
+
+    Todos.findByIdAndRemove(id).then((todo)=>{
+
+        if(!todo){
+            return res.status(400).send(todo);
+        }
+        console.log('Success', id, todo);
+        res.status(200).send(todo);
+    }).catch((e)=> res.status(404).send());
+
+
+});
 
 app.listen(port,()=>{
     console.log(`Started on ${port}`);
