@@ -169,15 +169,16 @@ app.post('/newuser',(req,res)=>{
     }).then((token)=>{
         res.header('x-auth',token).send(user);
     }).catch((e)=>{
-        if(e.code=== 11000)
-        {
-        res.status(400).send({
-            "error": "Email Already Exist."
-        });
-    }
-    else{
-res.status(400).send(e.errors.password.message);
-    }
+        res.status(400).send(e);
+//         if(e.code=== 11000)
+//         {
+//         res.status(400).send({
+//             "error": "Email Already Exist."
+//         });
+//     }
+//     else{
+// res.status(400).send(e.errors.password.message);
+//     }
 
     });
 
