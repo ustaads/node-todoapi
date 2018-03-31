@@ -4,7 +4,8 @@ var bodyparser = require('body-parser');
 
 var {mongoose} = require('./db/mongoose');
 var {Todos} = require('./model/todo');
-var  {Users} = require('./model/user');
+var  {User} = require('./model/user');
+var {authenticate}= require('./middleware/authenticate');
 var {ObjectID} = require('mongodb');
 
 var app = express();
@@ -180,6 +181,13 @@ res.status(400).send(e.errors.password.message);
 
     });
 
+});
+
+
+
+app.get('/users/me',authenticate,(req,res)=>{
+
+  res.send(req.user);
 });
 
 app.listen(port,()=>{

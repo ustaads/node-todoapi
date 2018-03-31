@@ -66,6 +66,31 @@ UserSchema.methods.generateAuthToken = function (){
     });
 }
 
-var Users = mongoose.model('users',UserSchema);
+UserSchema.statics.findByToken = function(token){
+    var User = this;
+    var decoded;
 
-module.exports = { Users};
+    try{
+
+        decoded= jwt.verify(token,'abc123');
+    }
+    catch(e){
+
+        // return new Promise((res, rej)=>{
+        //     reject();
+        // });
+
+        return Promise.reject();
+    }
+
+    return User.findOne({
+
+        '_id': decoded._id,
+        'tokens.token': token,
+        'tokens.access':'auth'
+    });
+};
+
+var User = mongoose.model('users',UserSchema);
+
+module.exports = { User};
