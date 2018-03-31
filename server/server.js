@@ -133,7 +133,7 @@ app.post('/newuser',(req,res)=>{
    
     let data = _.pick(req.body,['email', 'password']);    
   
-    let user = new Users(data);
+    let user = new User(data);
  
 // Two things
 // 1. Different way of using then
