@@ -123,8 +123,64 @@ Todos.findByIdAndUpdate(id,{$set: body}, {new: true}).then((todo)=>{
 
 });
 
-
 } );
+
+
+//adding a new User using POST
+app.post('/newuser',(req,res)=>{
+
+   
+    let data = _.pick(req.body,['email', 'password']);    
+  
+    let user = new Users(data);
+ 
+// Two things
+// 1. Different way of using then
+//2. different way of sending limited data
+//     user.save().then((user)=>{
+//         // res.status(200).send(user);
+//          user.generateAuthToken().then((token)=>{
+
+//               // res.header('x-auth',token).send(user);
+//         res.send({
+//             id: user.id,
+//             email: user.email
+//         });
+
+//          });
+//     }).catch((e)=>{
+//         if(e.code=== 11000)
+//         {
+//         res.status(400).send({
+//             "error": "Email Already Exist."
+//         });
+//     }
+//     else{
+// res.status(400).send(e.errors.password.message);
+//     }
+
+//     });
+
+
+    user.save().then((user)=>{
+        // res.status(200).send(user);
+        return user.generateAuthToken();
+    }).then((token)=>{
+        res.header('x-auth',token).send(user);
+    }).catch((e)=>{
+        if(e.code=== 11000)
+        {
+        res.status(400).send({
+            "error": "Email Already Exist."
+        });
+    }
+    else{
+res.status(400).send(e.errors.password.message);
+    }
+
+    });
+
+});
 
 app.listen(port,()=>{
     console.log(`Started on ${port}`);
