@@ -5,7 +5,7 @@ var bodyparser = require('body-parser');
 var {mongoose} = require('./db/mongoose');
 var {Todos} = require('./model/todo');
 var  {User} = require('./model/user');
-var {authenticate}= require('./middleware/authenticate');
+var {authenticate, loginAuthenticate}= require('./middleware/authenticate');
 var {ObjectID} = require('mongodb');
 
 var app = express();
@@ -191,8 +191,14 @@ app.get('/users/me',authenticate,(req,res)=>{
   res.send(req.user);
 });
 
+app.post('/users/login',loginAuthenticate,(req,res)=>{
+    console.log('dfkjdsfbskjfkjsdbfkj',req.user);
+    res.header( 'x-auth', req.user.tokens[0].token).send(req.user); 
+});
+
 app.listen(port,()=>{
     console.log(`Started on ${port}`);
 });
 
-module.exports = {app};
+
+
