@@ -185,3 +185,38 @@ describe('Post /users',()=>{
         .expect(400).end(done);
     });
 });
+
+describe('Post /users/login',()=>{
+
+
+    it('should login user and return auth header',(done)=>{
+
+        request(app)
+        .post('/users/login')
+        .send({
+            email: 'userone@seed.com',
+            password: '123456'
+        })
+        .expect(200)
+        .expect((res)=>{
+            expect(res.headers['x-auth']).toExist();
+        }).end(done);
+
+    });
+    
+
+    it('should reject invalid login',(done)=>{
+
+        request(app)
+        .post('/users/login')
+        .send({
+            email: 'user@seed.com',
+            password: '123456'
+        })
+        .expect(401)
+        .end(done);
+
+    });
+
+
+});

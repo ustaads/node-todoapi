@@ -192,7 +192,7 @@ app.get('/users/me',authenticate,(req,res)=>{
 });
 
 app.post('/users/login',loginAuthenticate,(req,res)=>{
-    console.log('dfkjdsfbskjfkjsdbfkj',req.user);
+    
     res.header( 'x-auth', req.user.tokens[0].token).send(req.user); 
 });
 
@@ -201,4 +201,4 @@ app.listen(port,()=>{
 });
 
 
-
+module.exports= {app};

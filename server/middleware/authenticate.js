@@ -34,11 +34,11 @@ var loginAuthenticate = (req,res,next)=>{
         // console.log(user[0].password);
 
         bcrypt.compare(req.body.password, user.password,(err,res1)=>{
-            console.log(res);
+            // console.log(res);
             if(res1 === true){
                 req.user = user;
                 req.token = user.tokens[0].token;
-                console.log('_______________________',user.tokens[0].token);
+                // console.log('_______________________',user.tokens[0].token);
                 next();
             }
             else{
