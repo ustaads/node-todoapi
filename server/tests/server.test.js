@@ -213,10 +213,23 @@ describe('Post /users/login',()=>{
             email: 'user@seed.com',
             password: '123456'
         })
-        .expect(401)
+        .expect(400)
         .end(done);
 
     });
 
+
+});
+
+describe('Delete /users/me/token',()=>{
+
+    it('should return delete token on logout',(done)=>{
+
+        request(app)
+        .delete('/user/me/token')
+        .set('x-auth',users[0].tokens[0].token)
+        .expect(200)
+        .end(done);
+    });
 
 });

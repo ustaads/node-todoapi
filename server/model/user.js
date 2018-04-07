@@ -1,6 +1,6 @@
 
 const validator = require('validator');
-const mongoose= require('mongoose');
+const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
@@ -12,11 +12,11 @@ var UserSchema = new mongoose.Schema({
         minlength: 11,
         trim: true,
         unique: true,
-        validate:{
+        validate: {
 
             // or we can simply do this
             // validator: validator.isEmail
-            validator: (value)=>{
+            validator: (value) => {
                 return validator.isEmail(value)
             },
             message: '{VALUE} is Not a Valid Email'
@@ -43,39 +43,39 @@ var UserSchema = new mongoose.Schema({
 
 
 
-UserSchema.methods.toJSON = function (){
+UserSchema.methods.toJSON = function () {
 
     var user = this;
     var userObject = user.toObject();
-    
 
-    return _.pick(userObject,['_id', 'email']);
+
+    return _.pick(userObject, ['_id', 'email']);
 };
 
 
 //Generating an Instance Method-- every single user have its own different Method-- Thats why this keyword is used
-UserSchema.methods.generateAuthToken = function (){
+UserSchema.methods.generateAuthToken = function () {
 
     var user = this;
     var access = 'auth';
-    var token = jwt.sign({_id: user._id.toHexString(),access},'abc123').toString();
+    var token = jwt.sign({ _id: user._id.toHexString(), access }, 'abc123').toString();
 
-    user.tokens = user.tokens.concat([{access,token}]); 
+    user.tokens = user.tokens.concat([{ access, token }]);
 
-    return user.save().then(()=>{
+    return user.save().then(() => {
         return token;
     });
 }
 
-UserSchema.statics.findByToken = function(token){
+UserSchema.statics.findByToken = function (token) {
     var User = this;
     var decoded;
 
-    try{
+    try {
 
-        decoded= jwt.verify(token,'abc123');
+        decoded = jwt.verify(token, 'abc123');
     }
-    catch(e){
+    catch (e) {
 
         // return new Promise((res, rej)=>{
         //     reject();
@@ -88,33 +88,72 @@ UserSchema.statics.findByToken = function(token){
 
         '_id': decoded._id,
         'tokens.token': token,
-        'tokens.access':'auth'
+        'tokens.access': 'auth'
     });
 };
 
-UserSchema.pre('save',function(next){
+
+UserSchema.statics.findByCredentials = function (email, password) {
+
+    //try to remove and run at last
+    let User = this;
+
+    return User.findOne({ email }).then((user) => {
+        if (!user) {
+            return Promise.reject();
+        }
+        return new Promise((resolve, reject) => {
+            bcrypt.compare(password, user.password, (err, response) => {
+
+                if (response) {
+                    resolve(user);
+
+                    
+                }
+                else {
+                    reject();
+                }
+            });
+        });
+    });
+
+};
+
+UserSchema.methods.removeToken = function (token) {
+    var user = this;
+    return user.update({
+
+        $pull: {
+            tokens: {
+                token: token
+            }
+        }
+    });
+};
+
+UserSchema.pre('save', function (next) {
 
     var user = this;
 
-    if(user.isModified('password')){
+    if (user.isModified('password')) {
 
-        bcrypt.genSalt(10,(err,salt)=>{
+        bcrypt.genSalt(10, (err, salt) => {
 
-            bcrypt.hash(user.password,salt,(err,hash)=>{
-                
-                user.password= hash;
+            bcrypt.hash(user.password, salt, (err, hash) => {
+
+                user.password = hash;
                 next();
             });
 
         });
 
 
-    }else{
-        next(); 
+    } else {
+        next();
     }
 
 });
 
-var User = mongoose.model('users',UserSchema);
+var User = mongoose.model('users', UserSchema);
 
-module.exports = { User};
+module.exports = { User };
